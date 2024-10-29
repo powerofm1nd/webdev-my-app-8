@@ -3,8 +3,31 @@ import { useFormik } from 'formik';
 import { Formik } from 'formik';
 import { Form } from 'formik';
 import CustomInput from './CustomInput';
+import * as Yup from 'yup';
 
 export function Registration() {
+    const SignupSchema = Yup.object().shape({
+        firstName: Yup.string()
+          .min(3, 'Too Short!')
+          .required('Required'),
+        secondName: Yup.string()
+          .max(40, 'Too long!')
+          .required('Required'),
+        email: Yup.string().email('Invalid email').required('Required'),
+        //...
+        age: Yup.number()
+        .min(16, 'Min 16')
+        .max(33, 'Max 33')
+        .required('Required and must be a number type'),
+        //...
+        password: Yup.string()
+        .matches(
+            /^.*[A-Z].*[^a-zA-Z]|.*[^a-zA-Z].*[A-Z].*$/,
+           'The password must contain at least 1 capital letter and 1 character other than a letter',
+        )
+        .max(33, 'Max 33')
+        .required('Required and must be a number type')
+      });
 
     const formik = useFormik({
         initialValues: {
@@ -17,49 +40,50 @@ export function Registration() {
         onSubmit: values => {
 
         },
-        validate: values => {
-            let errors = {}
+        // validate: values => {
+        //     let errors = {}
 
-            //FirstName
-            if (!values.firstName) {
-                errors.firstName = 'Required'
-            } else if (values.firstName.length < 3) {
-                errors.firstName = 'The length must be at least 3 symbols'
-            }
+        //     //FirstName
+        //     if (!values.firstName) {
+        //         errors.firstName = 'Required'
+        //     } else if (values.firstName.length < 3) {
+        //         errors.firstName = 'The length must be at least 3 symbols'
+        //     }
 
-            //SecondName
-            if (!values.secondName) {
-                errors.secondName = 'Required'
-            } else if (!/^[A-Za-zА-Яа-я]{0,10}\s[0-9]{8}$/i.test(values.secondName)) {
-                errors.secondName = 'The last name should contain no more than (10 + your student ID number) characters';
-            }
+        //     //SecondName
+        //     if (!values.secondName) {
+        //         errors.secondName = 'Required'
+        //     } else if (!/^[A-Za-zА-Яа-я]{0,10}\s[0-9]{2}$/i.test(values.secondName)) {
+        //         errors.secondName = 'The last name should contain no more than (10 + your student ID number) characters';
+        //     }
 
-            //Email
-            if (!values.email) {
-                errors.email = 'Required';
-            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-                errors.email = 'Invalid email address';
-            }
+        //     //Email
+        //     if (!values.email) {
+        //         errors.email = 'Required';
+        //     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        //         errors.email = 'Invalid email address';
+        //     }
 
-            //Age
-            if (!values.age) {
-                errors.age = 'Required and must be number value';
-            } else if (values.age < 16 || values.age > 33) {
-                errors.age = 'Age must be in range 16-33';
-            }
+        //     //Age
+        //     if (!values.age) {
+        //         errors.age = 'Required and must be number value';
+        //     } else if (values.age < 16 || values.age > 33) {
+        //         errors.age = 'Age must be in range 16-33';
+        //     }
 
-            //[A-Z].*[^a-zA-Z]|[^a-zA-Z].*[A-Z]
-            //Password 
-            if (!values.password) {
-                errors.password = 'Required';
-            } else if (!/^[A-Z].*[^a-zA-Z]|[^a-zA-Z].*[A-Z]$/i.test(values.password)) {
-                errors.password = 'The password must contain at least 1 capital letter and 1 character other than a letter';
-            }
+        //     //[A-Z].*[^a-zA-Z]|[^a-zA-Z].*[A-Z]
+        //     //Password 
+        //     if (!values.password) {
+        //         errors.password = 'Required';
+        //     } else if (!/^[A-Z].*[^a-zA-Z]|[^a-zA-Z].*[A-Z]$/i.test(values.password)) {
+        //         errors.password = 'The password must contain at least 1 capital letter and 1 character other than a letter';
+        //     }
 
-            console.log(errors)
+        //     console.log(errors)
 
-            return errors
-        },
+        //     return errors
+        // },
+        validationSchema: SignupSchema
     });
 
     return (
